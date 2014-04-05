@@ -1,0 +1,10 @@
+{
+  "name": "hungry-me",
+  "description": "I'm really hungry.",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "autoprefixer": "x",
+    "less": "x"
+  }
+}

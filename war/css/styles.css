@@ -1,0 +1,33 @@
+@import url(http://fonts.googleapis.com/css?family=Oswald:400,700);
+@import url(http://fonts.googleapis.com/css?family=Droid+Serif:400,700);
+/* COLORS */
+.font-heading {
+  font: bold 20px 'Oswald', sans-serif;
+}
+.font-body {
+  font: 14px 'Droid Serif', serif;
+}
+* {
+  margin: 0px;
+  padding: 0px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 0px;
+}
+html,
+body {
+  font: 14px 'Droid Serif', serif;
+  background: url('../images/backgrounds/001.jpg');
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+button[id*='i-am-'] {
+  font: bold 20px 'Oswald', sans-serif;
+  display: block;
+  margin: 0px auto;
+  background: red;
+  border-radius: 3px;
+  width: 40%;
+}
