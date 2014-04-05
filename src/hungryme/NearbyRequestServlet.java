@@ -6,10 +6,13 @@ import javax.servlet.http.*;
 @SuppressWarnings("serial")
 public class NearbyRequestServlet extends HttpServlet {
 	
-	public void doGet(HttpServletRequest req, HttpServletResponse resp)
+	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
+		
+		//String feeling req.getAttribute("feeling");
+		
+		resp.getWriter().println(Common.processRequest(req));
 		resp.setContentType("text/plain");
-		resp.getWriter().println("Hello, world");
 		
 	}
 	
