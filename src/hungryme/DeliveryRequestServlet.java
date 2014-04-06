@@ -15,82 +15,90 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-
 @SuppressWarnings("serial")
 public class DeliveryRequestServlet extends HttpServlet {
-	
+
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
-		
+
 		RequestParams request = Common.processRequest(req);
-		if (request.getCategory() == null){
+
+		String returnStr = "";
+		if (request.getCategory() == null) {
 			// if category is null, request determines available categories
-			DeliveryDotComApi.queryNearbyCategories(request.getLatitude(), request.getLongitude());
-			
-			//TODO: RETURN RESULTS HERE
-			
+			String[] listOfCategories = DeliveryDotComApi
+					.queryNearbyCategories(request.getLatitude(),
+							request.getLongitude());
+
+			for (String category : listOfCategories) {
+				returnStr += category + "\n";
+			}
+
 		}
-		
-		
+
 		resp.setContentType("text/plain");
-		//resp.getWriter().println("Delivery");
-		
-		
+		resp.getWriter().println(returnStr);
 	}
-	
-	static class DeliveryDotComApi{
-		//private static String API_KEY = "MGY1MTQzOWIwZTBkMmUyNjM2NjM2NTM4MjNkNGJjNjE5";
-		private static final String API_BASE_URL = 
-				"https://api.delivery.com/merchant/search/delivery?client_id=MGY1MTQzOWIwZTBkMmUyNjM2NjM2NTM4MjNkNGJjNjE5";
+
+	static class DeliveryDotComApi {
+		// private static String API_KEY =
+		// "MGY1MTQzOWIwZTBkMmUyNjM2NjM2NTM4MjNkNGJjNjE5";
+		private static final String API_BASE_URL = "https://api.delivery.com/merchant/search/delivery?client_id=MGY1MTQzOWIwZTBkMmUyNjM2NjM2NTM4MjNkNGJjNjE5";
 		private static final String JSON_MERCHANT_ARRAY_NAME = "merchants";
 		private static final String JSON_MERCHANT_SUMMARY_NAME = "summary";
 		private static final String JSON_MERCHANT_SUMMARY_CUISINES_ARRAY_NAME = "cuisines";
-		
-		
-		public static String[] queryNearbyCategories(double latitude, double longitude){
+
+		public static String[] queryNearbyCategories(double latitude,
+				double longitude) {
 			ArrayList<String> nearbyCategories = new ArrayList<String>();
-			
+
 			try {
-				URL queryURL = new URL(API_BASE_URL + "&" + Double.toString(latitude) + "&" + Double.toString(longitude));
+				URL queryURL = new URL(API_BASE_URL + "&latitude="
+						+ Double.toString(latitude) + "&longitude="
+						+ Double.toString(longitude));
 				String ApiReplyJson = Common.requestHttp(queryURL);
-				
+
 				/*
-				 * {...,"merchants":
-				 * 		[
-				 * 			{...,"summary":
-				 * 				{...,"cuisines":
-				 * 					["Deli","Glatt Kosher","Kosher","American"]
-				 * 
+				 * {...,"merchants": [ {...,"summary": {...,"cuisines":
+				 * ["Deli","Glatt Kosher","Kosher","American"]
 				 */
-				
-				JsonObject jobject = new JsonParser().parse(ApiReplyJson).getAsJsonObject();
-				JsonArray jarray = jobject.getAsJsonArray(JSON_MERCHANT_ARRAY_NAME);
+
+				JsonObject jobject = new JsonParser().parse(ApiReplyJson)
+						.getAsJsonObject();
+				JsonArray jarray = jobject
+						.getAsJsonArray(JSON_MERCHANT_ARRAY_NAME);
 				Iterator<JsonElement> iter = jarray.iterator();
 				while (iter.hasNext()) {
-					jobject = iter.next().getAsJsonObject().getAsJsonObject(JSON_MERCHANT_SUMMARY_NAME);
-					JsonArray cuisines = jobject.getAsJsonArray(JSON_MERCHANT_SUMMARY_CUISINES_ARRAY_NAME);
-					Iterator<JsonElement> cuisinesIter = cuisines.iterator();
-					
-					String category;
-					while(cuisinesIter.hasNext()){
-						 category = iter.next().getAsJsonPrimitive().getAsString();
-						 if (!nearbyCategories.contains(category)){
-							 nearbyCategories.add(category);
-						 }
+					jobject = iter.next().getAsJsonObject()
+							.getAsJsonObject(JSON_MERCHANT_SUMMARY_NAME);
+					try {
+						JsonArray cuisines = jobject
+								.getAsJsonArray(JSON_MERCHANT_SUMMARY_CUISINES_ARRAY_NAME);
+						Iterator<JsonElement> cuisinesIter = cuisines
+								.iterator();
+
+						String category;
+						while (cuisinesIter.hasNext()) {
+							category = cuisinesIter.next().toString();
+							if (!nearbyCategories.contains(category)) {
+								nearbyCategories.add(category);
+							}
+						}
+					} catch (Exception e) {
+
 					}
-					
+
 				}
-				
-				return (String[]) nearbyCategories.toArray();
-				
+
+				return nearbyCategories.toArray(new String[0]);
+
 			} catch (MalformedURLException e) {
 				// TODO: Malformed URL error
 				e.printStackTrace();
 				return null;
 			}
 		}
-		
+
 	}
-	
-	
+
 }

@@ -17,7 +17,7 @@ public class Common {
 	public final static String FEELING_PARAM_NAME = "feeling";
 	public final static String CATEGORY_PARAM_NAME = "category";
 	public final static String LATITUDE_PARAM_NAME = "lat";
-	public final static String LONGITUDE_PARAM_NAME = "long";
+	public final static String LONGITUDE_PARAM_NAME = "lon";
 	public final static String EXCLUDED_PARAM_NAME = "not";
 
 	public final static String LIST_DELIMETER = "`";
@@ -38,8 +38,8 @@ public class Common {
 		// Get location
 		double latitude = 0, longitude = 0;
 		try {
-			latitude = Double.parseDouble((String) request.getParameter("LATITUDE_PARAM_NAME"));
-			longitude = Double.parseDouble((String) request.getParameter("LONGITUDE_PARAM_NAME"));
+			latitude = Double.parseDouble((String) request.getParameter(LATITUDE_PARAM_NAME));
+			longitude = Double.parseDouble((String) request.getParameter(LONGITUDE_PARAM_NAME));
 		} catch (NumberFormatException e) {
 			//TODO: Error
 			e.printStackTrace();
