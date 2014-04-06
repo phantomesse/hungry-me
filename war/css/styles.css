@@ -3,11 +3,20 @@
 /* SIZING */
 /* COLORS */
 .font-heading {
-  font: bold 20px 'Oswald', sans-serif;
+  font: bold 36px 'Oswald', sans-serif;
+  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
 }
 .font-body {
   font: 16px 'Droid Serif', serif;
   text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.8);
+}
+.box-styling {
+  background: rgba(255, 255, 255, 0.5);
+  color: #ffffff;
+  border-radius: 3px;
+  border: 1px #ffffff solid;
+  -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 }
 * {
   margin: 0px;
@@ -21,59 +30,142 @@ html,
 body {
   font: 16px 'Droid Serif', serif;
   text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.8);
-  background: url('../images/backgrounds/001.jpg') no-repeat center center fixed;
-  -webkit-background-size: cover;
-  background-size: cover;
   text-align: center;
   width: 100%;
   height: 100%;
 }
+section {
+  display: table;
+  position: relative;
+  background: no-repeat center center fixed;
+  -webkit-background-size: cover;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+}
+section div.inner {
+  display: table-cell;
+  margin: 0px auto;
+  text-align: center;
+  width: 100%;
+  vertical-align: middle;
+}
+section#feeling {
+  background-image: url('../images/backgrounds/001.jpg');
+}
+section#categories {
+  background-image: url('../images/backgrounds/002.jpg');
+}
+h1#title {
+  font: bold 36px 'Oswald', sans-serif;
+  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  font-size: 50px;
+  text-shadow: 0px 0px 15px black;
+}
+h2#subtitle {
+  font: 16px 'Droid Serif', serif;
+  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.8);
+  padding-bottom: 50px;
+  color: #ffffff;
+  font-size: 24px;
+  text-shadow: 0px 0px 15px black;
+}
 input#home-address {
   font: 16px 'Droid Serif', serif;
   text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.8);
-  display: block;
-  margin: 50px auto 0px;
-  padding: 10px 20px;
   background: rgba(255, 255, 255, 0.5);
   color: #ffffff;
-  width: 100%;
-  max-width: 960px;
   border-radius: 3px;
   border: 1px #ffffff solid;
   -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  display: block;
+  margin: 0px auto;
+  padding: 10px 20px;
+  min-width: 400px;
+  width: 80%;
+  max-width: 960px;
+  outline: none;
 }
 input#home-address::-webkit-input-placeholder {
   color: #ffffff;
 }
 input#home-address:-moz-placeholder {
-  /* Firefox 18- */
   color: #ffffff;
 }
 input#home-address::-moz-placeholder {
-  /* Firefox 19+ */
   color: #ffffff;
 }
 input#home-address:-ms-input-placeholder {
   color: #ffffff;
 }
+input#home-address.error {
+  border: 1px #ff0381 solid;
+  -webkit-box-shadow: 0px 0px 10px #ff69b4;
+  box-shadow: 0px 0px 10px #ff69b4;
+}
+input#home-address:focus {
+  -webkit-box-shadow: 0px 0px 10px black;
+  box-shadow: 0px 0px 10px black;
+}
 button[id*='i-am-'] {
-  font: bold 20px 'Oswald', sans-serif;
-  display: inline-block;
-  margin: 50px 20px 0px;
-  padding: 50px 0px;
+  font: bold 36px 'Oswald', sans-serif;
+  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
   background: rgba(255, 255, 255, 0.5);
   color: #ffffff;
-  font-size: 50px;
-  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
   border-radius: 3px;
   border: 1px #ffffff solid;
   -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  display: inline-block;
+  margin: 50px 20px 0px;
+  padding: 50px 0px;
+  font-size: 50px;
   min-width: 400px;
   width: 40%;
   max-width: -webkit-calc(460px);
   max-width: calc(460px);
   cursor: pointer;
   outline: none;
+}
+button[id*='i-am-']:hover {
+  text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+  -webkit-box-shadow: 0px 0px 10px black;
+  box-shadow: 0px 0px 10px black;
+}
+div#category-choices {
+  text-align: center;
+}
+div#category-choices div.choice {
+  background: rgba(255, 255, 255, 0.5);
+  color: #ffffff;
+  border-radius: 3px;
+  border: 1px #ffffff solid;
+  -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  display: inline-block;
+  margin: 10px;
+  padding: 20px;
+  width: 200px;
+  height: 200px;
+  cursor: pointer;
+}
+div#category-choices div.choice:hover {
+  -webkit-box-shadow: 0px 0px 10px black;
+  box-shadow: 0px 0px 10px black;
+}
+div#category-choices div.choice:hover h2 {
+  text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+}
+div#category-choices div.choice div.inner {
+  display: table;
+  width: 100%;
+  height: 100%;
+}
+div#category-choices div.choice h2 {
+  font: bold 36px 'Oswald', sans-serif;
+  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+  display: table-cell;
+  vertical-align: middle;
 }

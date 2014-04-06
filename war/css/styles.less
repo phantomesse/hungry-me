@@ -7,11 +7,12 @@
 
 /* COLORS */
 @color-base: #FFF;
-@color-accent: #7CB907;
+@color-accent: #CCC;
 @color-error: hotpink;
 
 .font-heading {
-  font: bold 20px 'Oswald', sans-serif;
+  font: bold 36px 'Oswald', sans-serif;
+  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
 }
 
 .font-body {
@@ -19,22 +20,30 @@
   text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.8);
 }
 
+.box-styling {
+  background: fade(@color-base, 50%);
+  color: @color-base;
+  border-radius: 3px;
+  border: 1px @color-base solid;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
 .placeholder(@color) {
   &::-webkit-input-placeholder {
-   color: @color;
- }
+    color: @color;
+  }
 
- &:-moz-placeholder { /* Firefox 18- */
-  color: @color;
-}
+  &:-moz-placeholder {
+    color: @color;
+  }
 
-&::-moz-placeholder {  /* Firefox 19+ */
-  color: @color;
-}
+  &::-moz-placeholder {
+    color: @color;
+  }
 
-&:-ms-input-placeholder {
-  color: @color;
-}
+  &:-ms-input-placeholder {
+    color: @color;
+  }
 }
 
 * {
@@ -47,46 +56,129 @@
 html, body {
   .font-body;
 
-  background: url('../images/backgrounds/001.jpg') no-repeat center center fixed;
-  background-size: cover;
   text-align: center;
   width: 100%;
   height: 100%;
 }
 
-input#home-address {
+section {
+  display: table;
+  position: relative;
+  background: no-repeat center center fixed;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+
+  div.inner {
+    display: table-cell;
+    margin: 0px auto;
+    text-align: center;
+    width: 100%;
+    vertical-align: middle;
+  }
+
+  &#feeling {
+    background-image: url('../images/backgrounds/001.jpg');
+  }
+
+  &#categories {
+    background-image: url('../images/backgrounds/002.jpg');
+  }
+}
+
+h1#title {
+  .font-heading;
+
+  color: @color-base;
+  font-size: 50px;
+  text-shadow: 0px 0px 15px black;
+}
+
+h2#subtitle {
   .font-body;
 
-  display: block;
-  margin: 50px auto 0px;
-  padding: 10px 20px;
-  background: fade(@color-base, 50%);
+  padding-bottom: 50px;
   color: @color-base;
-  width: 100%;
+  font-size: 24px;
+  text-shadow: 0px 0px 15px black;
+}
+
+input#home-address {
+  .font-body;
+  .box-styling;
+
+  display: block;
+  margin: 0px auto;
+  padding: 10px 20px;
+  min-width: @min-width;
+  width: 80%;
   max-width: @max-width;
-  border-radius: 3px;
-  border: 1px @color-base solid;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  outline: none;
 
   .placeholder(@color-base);
+
+  &.error {
+    border: 1px darken(@color-error, 20%) solid;
+    box-shadow: 0px 0px 10px @color-error;
+  }
+
+  &:focus {
+    box-shadow: 0px 0px 10px black;
+  }
 }
 
 button[id*='i-am-'] {
   .font-heading;
+  .box-styling;
 
   display: inline-block;
   margin: 50px 20px 0px;
   padding: 50px 0px;
-  background: fade(@color-base, 50%);
-  color: @color-base;
   font-size: 50px;
-  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
-  border-radius: 3px;
-  border: 1px @color-base solid;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
   min-width: @min-width;
   width: 40%;
   max-width: calc(@max-width/2 - 20px);
   cursor: pointer;
   outline: none;
+
+  &:hover {
+    text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+    box-shadow: 0px 0px 10px black;
+  }
+}
+
+div#category-choices {
+  text-align: center;
+
+  div.choice {
+    .box-styling;
+
+    display: inline-block;
+    margin: 10px;
+    padding: 20px;
+    width: 200px;
+    height: 200px;
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: 0px 0px 10px black;
+
+      h2 {
+        text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+      }
+    }
+
+    div.inner {
+      display: table;
+      width: 100%;
+      height: 100%;
+    }
+
+    h2 {
+      .font-heading;
+
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
 }
