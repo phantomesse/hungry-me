@@ -40,10 +40,12 @@ function hideLoadingScreen(section) {
 function feelingHungry() {
   var atHome = isAtHome();
 
-  if (atHome === true) {
+  atHome.done(function(data) {
+    console.log("DONE");
+
+    if (data === true) {
     // Clear categories
     $('#category-choices').empty();
-    $('#category-choices').append('<div class="arrow-left"></div><div class="arrow-right"></div>');
 
     // Show loading screen
     showLoadingScreen('section#categories');
@@ -57,6 +59,7 @@ function feelingHungry() {
     $.post("delivery", {'feeling' : 'hungry', 'lat' : currentLat, 'lon' : currentLon, 'not' : '' }).done(function(data) {
       var categories = data.split('\n');
 
+      // Show some categories
       for (var i = 0; i < categories.length - 1; i++) {
         $('#category-choices').append('<div class="choice"><div class="inner"><h2>' + categories[i] + '</h2></div></div>');
       }
@@ -65,13 +68,37 @@ function feelingHungry() {
       $('#categories h1#title').text("It looks like you're at home!");
       $('#categories h2#subtitle').text("Here are some delivery options...");
 
-      // Show a few categories
+      $('.choice').click(function() {
+        var choice = $($(this).children('.inner')[0]).children('h2').text();
 
+        // Show loading screen
+        showLoadingScreen('section#venues');
+
+        // Scroll to categories section
+        $('html, body').animate({
+          scrollTop: $("#venues").offset().top
+        }, 500);
+
+        // Load venues based on choice
+        $.post("delivery", {'feeling' : 'hungry', 'lat' : currentLat, 'lon' : currentLon, 'not' : '', 'category' : choice }).done(function(data) {
+          console.log(data);
+
+
+          // Set title and subtitle
+          $('#venues h1#title').text("Here are some restaurants!");
+
+          // Show some venues
+          
+
+          hideLoadingScreen('section#venues');
+        });
+
+      });
 
       hideLoadingScreen('section#categories');
     });
 
-  } else if (atHome === false) {
+} else if (data === false) {
     // Set title and subtitle
     $('#categories h1#title').text("It looks like you're outside!");
     $('#categories h2#subtitle').text("Here are some cuisine types near you...");
@@ -81,6 +108,7 @@ function feelingHungry() {
       scrollTop: $("#categories").offset().top
     }, 500);
   }
+});
 }
 
 function feelingThirsty() {
@@ -108,28 +136,20 @@ function feelingThirsty() {
   }
 }
 
-// TODO
-function setHomeAddress(address) {
-// Set home address
-
-// Set home latitude and longitude
-}
-
 function isAtHome() {
-  var cookieStructure = parseCookies();
-
+  var deferred = $.Deferred();
   var address, lat, lon;
-  if (cookieStructure['homeAddress'] == null || cookieStructure['homeLat'] == null || cookieStructure['homeLon'] == null) {
+
+//  if (cookieStructure['homeAddress'] == null || cookieStructure['homeLat'] == null || cookieStructure['homeLon'] == null) {
     // Check if home address input field has text
     address = $('input#home-address').val().trim();
 
     if (address === '') {
       $('input#home-address').addClass('error');
       $('input#home-address').focus();
-      return homeAddressError;
+      deferred.resolve(homeAddressError);
     } else {
       // Translate address into lat/lon coordinates
-      address = $('input#home-address').val();
       var geocoder = new google.maps.Geocoder();
       geocoder.geocode({ 'address': address}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
@@ -149,18 +169,20 @@ function isAtHome() {
           document.cookie = 'homeLon=' + lon;
 
           // Get current lat and lon
-          currentLat = Math.round(cookieStructure['currentLat'] * 100) / 100;
-          currentLon = Math.round(cookieStructure['currentLon'] * 100) / 100;
+          currentLat = Math.round(currentLat * 100) / 100;
+          currentLon = Math.round(currentLon * 100) / 100;
 
-          return lat <= currentLat + 0.05 && lat >= currentLat - 0.05 && lon <= currentLon + 0.05 && lon >= currentLon - 0.05;
+          var results = lat <= currentLat + 0.05 && lat >= currentLat - 0.05 && lon <= currentLon + 0.05 && lon >= currentLon - 0.05;
+          deferred.resolve(results);
         } else {
           $('input#home-address').addClass('error');
           $('input#home-address').focus();
-          return homeAddressError;
+          deferred.resolve(homeAddressError);
         }
       });
 }
-} else {
+return deferred.promise();
+/*} else {
     // Home address exists
     address = cookieStructure['homeAddress'];
     lat = Math.round(cookieStructure['homeLat'] * 100) / 100;
@@ -171,7 +193,7 @@ function isAtHome() {
     currentLon = Math.round(cookieStructure['currentLon'] * 100) / 100;
 
     return lat <= currentLat + 0.05 && lat >= currentLat - 0.05 && lon <= currentLon + 0.05 && lon >= currentLon - 0.05;
-  }
+  }*/
 }
 
 // Parses cookies into a hash table of key-value pairs
