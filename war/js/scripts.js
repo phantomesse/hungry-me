@@ -2,6 +2,8 @@ var homeAddressError = "Home address error.";
 var currentLat, currentLon;
 
 $(document).ready(function() {
+  $('div.loading').hide();
+
   // Scroll to the top
   $(window).scrollTop(0);
 
@@ -27,7 +29,61 @@ $(document).ready(function() {
   }
 });
 
+function showLoadingScreen(section) {
+  $(section + ' div.loading').show();
+}
+
+function hideLoadingScreen(section) {
+  $(section + ' div.loading').fadeOut();
+}
+
 function feelingHungry() {
+  var atHome = isAtHome();
+
+  if (atHome === true) {
+    // Clear categories
+    $('#category-choices').empty();
+    $('#category-choices').append('<div class="arrow-left"></div><div class="arrow-right"></div>');
+
+    // Show loading screen
+    showLoadingScreen('section#categories');
+
+    // Scroll to categories section
+    $('html, body').animate({
+      scrollTop: $("#categories").offset().top
+    }, 500);
+
+    // Get stuff
+    $.post("delivery", {'feeling' : 'hungry', 'lat' : currentLat, 'lon' : currentLon, 'not' : '' }).done(function(data) {
+      var categories = data.split('\n');
+
+      for (var i = 0; i < categories.length - 1; i++) {
+        $('#category-choices').append('<div class="choice"><div class="inner"><h2>' + categories[i] + '</h2></div></div>');
+      }
+
+      // Set title and subtitle
+      $('#categories h1#title').text("It looks like you're at home!");
+      $('#categories h2#subtitle').text("Here are some delivery options...");
+
+      // Show a few categories
+
+
+      hideLoadingScreen('section#categories');
+    });
+
+  } else if (atHome === false) {
+    // Set title and subtitle
+    $('#categories h1#title').text("It looks like you're outside!");
+    $('#categories h2#subtitle').text("Here are some cuisine types near you...");
+
+    // Scroll to categories section
+    $('html, body').animate({
+      scrollTop: $("#categories").offset().top
+    }, 500);
+  }
+}
+
+function feelingThirsty() {
   var atHome = isAtHome();
 
   if (atHome === true) {
@@ -43,17 +99,13 @@ function feelingHungry() {
   } else if (atHome === false) {
     // Set title and subtitle
     $('#categories h1#title').text("It looks like you're outside!");
-    $('#categories h2#subtitle').text("Here are some cuisine types near you...");
+    $('#categories h2#subtitle').text("Here are some drink types near you...");
 
     // Scroll to categories section
     $('html, body').animate({
       scrollTop: $("#categories").offset().top
     }, 500);
   }
-}
-
-function feelingThirsty() {
-  console.log("I'm feeling thirsty!");
 }
 
 // TODO

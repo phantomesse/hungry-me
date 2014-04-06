@@ -8,30 +8,29 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>Hungry_me</servlet-name>
 		<servlet-class>hungryme.Hungry_meServlet</servlet-class>
 	</servlet>
-	<servlet-mapping>
-		<servlet-name>Hungry_me</servlet-name>
-		<url-pattern>/hungry_me</url-pattern>
-	</servlet-mapping>
-
 	<servlet>
 		<servlet-name>Delivery</servlet-name>
 		<servlet-class>hungryme.DeliveryRequestServlet</servlet-class>
 	</servlet>
-	<servlet-mapping>
-		<servlet-name>Delivery</servlet-name>
-		<url-pattern>/delivery</url-pattern>
-	</servlet-mapping>
-
 	<servlet>
 		<servlet-name>Nearby</servlet-name>
 		<servlet-class>hungryme.NearbyRequestServlet</servlet-class>
 	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Hungry_me</servlet-name>
+		<url-pattern>/hungry_me</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Delivery</servlet-name>
+		<url-pattern>/delivery</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>Nearby</servlet-name>
 		<url-pattern>/nearby</url-pattern>
 	</servlet-mapping>
 
 	<welcome-file-list>
-		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 </web-app>

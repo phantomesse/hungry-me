@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Hungry Me</title>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" type="text/less" href="css/styles.css" />
+</head>
+
+<body>
+  <section id="feeling">
+    <div class="inner">
+      <input id="home-address" type="text" placeholder="Please enter your home address." />
+
+      <button id="i-am-hungry" onclick="feelingHungry()">I'm hungry!</button>
+      <button id="i-am-thirsty" onclick="feelingThirsty()">I'm thirsty!</button>
+    </div>
+  </section>
+
+  <section id="categories">
+    <div class="loading">
+      <div class="inner">
+        <div data-icon="a"></div>
+        <div data-icon="a"></div>
+        <div data-icon="a"></div>
+      </div>
+    </div>
+
+    <div class="inner">
+      <h1 id="title"></h1>
+      <h2 id="subtitle"></h2>
+
+      <div id="category-choices">
+      </div>
+
+    </div>
+
+  </section>
+
+  <script type="text/javascript" src="js/jquery.min.js"></script>
+  <script type="text/javascript"
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD46E1W5tfQBuipzDZuch4zQvPsvVR-Jk0&sensor=false"></script>
+  <script type="text/javascript" src="js/scripts.js"></script>
+
+</body>
+</html>

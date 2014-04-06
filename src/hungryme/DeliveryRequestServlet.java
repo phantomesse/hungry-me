@@ -31,8 +31,14 @@ public class DeliveryRequestServlet extends HttpServlet {
 							request.getLongitude());
 
 			for (String category : listOfCategories) {
+				category = category.substring(1, category.length() - 1).trim();
+				if (category.isEmpty()) {
+					continue;
+				}
 				returnStr += category + "\n";
 			}
+			
+			returnStr = returnStr.trim();
 
 		}
 
