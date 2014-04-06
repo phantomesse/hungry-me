@@ -7,20 +7,11 @@ $(document).ready(function() {
   // Scroll to the top
   $(window).scrollTop(0);
 
-  // Get current location
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(location) {
-      // Get latitude and longitude
-      currentLat = location.coords.latitude;
-      currentLon = location.coords.longitude;
+  showLoadingScreen('section#feeling');
 
-      // Store latitude and longitude in cookies
-      document.cookie = 'currentLat=' + currentLat + ';';
-      document.cookie = 'currentLon=' + currentLon + ';';
-    }, function() {
-      console.log("Error. Could not find location.");
-    });
-  }
+  getLocation(function (location) {
+    hideLoadingScreen('section#feeling');
+  });
 
   // Set home address if exists in cookies
   var cookieStructure = parseCookies();
@@ -28,6 +19,29 @@ $(document).ready(function() {
     $('input#home-address').val(cookieStructure['homeAddress']);
   }
 });
+
+function getLocation(callback) {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function (location) {
+      // Get latitude and longitude
+      currentLat = location.coords.latitude;
+      currentLon = location.coords.longitude;
+
+      // Store latitude and longitude in cookies
+      document.cookie = 'currentLat=' + currentLat + ';';
+      document.cookie = 'currentLon=' + currentLon + ';';
+
+      var returnValue = {
+        latitude: currentLat,
+        longitude: currentLon
+      }
+
+      callback(returnValue);
+    }, function() {
+      console.log("Error. Could not find location.");
+    });
+  }
+}
 
 function showLoadingScreen(section) {
   $(section + ' div.loading').show();
@@ -102,6 +116,11 @@ hideLoadingScreen('section#categories');
 });
 
 } else if (data === false) {
+  showLoadingScreen('section#categories');
+
+    // Clear categories
+    $('#category-choices').empty();
+
     // Set title and subtitle
     $('#categories h1#title').text("It looks like you're outside!");
     $('#categories h2#subtitle').text("Here are some cuisine types near you...");
@@ -110,6 +129,18 @@ hideLoadingScreen('section#categories');
     $('html, body').animate({
       scrollTop: $("#categories").offset().top
     }, 500);
+
+    // Get stuff
+    $.post("nearby", {'feeling' : 'hungry', 'lat' : currentLat, 'lon' : currentLon, 'not' : '' }).done(function(data) {
+      var categories = data.split('\n');
+
+      // Show some categories
+      for (var i = 0; i < categories.length - 1; i++) {
+        $('#category-choices').append('<div class="choice"><div class="inner"><h2>' + categories[i] + '</h2></div></div>');
+      }
+
+      hideLoadingScreen('section#categories');
+    });
   }
 });
 }
