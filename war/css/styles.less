@@ -129,6 +129,10 @@ section {
     background-image: url('../images/backgrounds/002.jpg');
   }
 
+  &#venues {
+    background-image: url('../images/backgrounds/003.jpg');
+  }
+
   div.loading {
     z-index: 99;
     display: table;
@@ -248,22 +252,6 @@ div#category-choices {
   white-space: nowrap;
   width: 80%;
   max-width: @max-width;
-
-  div[class*='arrow-'] {
-    display: none;
-    position: absolute;
-    top: 0px;
-    background: fade(@color-base, 50%);
-    width: 50px; height: 100%;
-
-    &.arrow-left {
-      left: -50px;
-    }
-
-    &.arrow-right {
-      right: -50px;
-    }
-  }
 
   div.choice {
     .box-styling;
