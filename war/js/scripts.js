@@ -170,7 +170,7 @@ hideLoadingScreen('section#categories');
             $('#venue-choices').append('<div class="choice nothing"><div class="inner"><h2>There\'s nothing open...</h2></div></div>');
           } else {
             for (var i = 0; i < data.length; i++) {
-              var googleMapsUrl = 'https://www.google.com/maps?saddr=My+Location&daddr=' + data[i].address.replace(/ /g, '+');;
+              var googleMapsUrl = 'https://www.google.com/maps?saddr=My+Location&daddr=' + data[i].name.replace(/ /g, '+') + ',+' + data[i].address.replace(/ /g, '+');
               $('#venue-choices').append('<a href="' + googleMapsUrl + '" target="_blank"><div class="venue"><div class="inner"><h2>' + data[i].name + '</h2><span>' + data[i].address + '</span></div></div></a>')
             }
           }
@@ -275,7 +275,7 @@ function feelingThirsty() {
             $('#venue-choices').append('<div class="choice nothing"><div class="inner"><h2>There\'s nothing open...</h2></div></div>');
           } else {
             for (var i = 0; i < data.length; i++) {
-              var googleMapsUrl = 'https://www.google.com/maps?saddr=My+Location&daddr=' + data[i].address.replace(/ /g, '+');;
+              var googleMapsUrl = 'https://www.google.com/maps?saddr=My+Location&daddr=' + data[i].name.replace(/ /g, '+') + ',+' + data[i].address.replace(/ /g, '+');
               $('#venue-choices').append('<a href="' + googleMapsUrl + '" target="_blank"><div class="venue"><div class="inner"><h2>' + data[i].name + '</h2><span>' + data[i].address + '</span></div></div></a>')
             }
           }

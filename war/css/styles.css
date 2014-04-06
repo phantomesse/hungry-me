@@ -87,13 +87,13 @@ section div.inner {
   vertical-align: middle;
 }
 section#feeling {
-  background-image: url('../images/backgrounds/001.jpg');
+  background-image: url('../images/section_feeling.jpg');
 }
 section#categories {
-  background-image: url('../images/backgrounds/002.jpg');
+  background-image: url('../images/section_categories.jpg');
 }
 section#venues {
-  background-image: url('../images/backgrounds/003.jpg');
+  background-image: url('../images/section_venues.jpg');
 }
 section div.loading {
   z-index: 99;
