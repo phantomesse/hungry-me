@@ -7,8 +7,10 @@
 
 <body>
 
-  <button id="i-am-hungry">I'm hungry!</button>
-  <button id="i-am-thirsty">I'm thirsty</button>
+  <input id="home-address" type="text" placeholder="Please enter your home address." />
+
+  <button id="i-am-hungry" onclick="feelingHungry()">I'm hungry!</button>
+  <button id="i-am-thirsty" onclick="feelingThirsty()">I'm thirsty</button>
 
   <%@include file="includes/footer.jsp" %>
 
