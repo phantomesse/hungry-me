@@ -39,7 +39,9 @@ public class DeliveryRequestServlet extends HttpServlet {
 			}
 			
 			returnStr = returnStr.trim();
-
+		} else {
+			// there is a category, so get venues in category
+			String category = request.getCategory();
 		}
 
 		resp.setContentType("text/plain");
@@ -53,6 +55,24 @@ public class DeliveryRequestServlet extends HttpServlet {
 		private static final String JSON_MERCHANT_ARRAY_NAME = "merchants";
 		private static final String JSON_MERCHANT_SUMMARY_NAME = "summary";
 		private static final String JSON_MERCHANT_SUMMARY_CUISINES_ARRAY_NAME = "cuisines";
+		
+		public static Venue[] getVenues(double latitude, double longitude, String category) {
+			ArrayList<Venue> venues = new ArrayList<Venue>();
+			
+			try {
+				URL queryURL = new URL(API_BASE_URL + "&latitude="
+						+ Double.toString(latitude) + "&longitude="
+						+ Double.toString(longitude));
+				String ApiReplyJson = Common.requestHttp(queryURL);
+				
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+			
+			return venues.toArray(new Venue[0]);
+		}
 
 		public static String[] queryNearbyCategories(double latitude,
 				double longitude) {

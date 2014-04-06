@@ -147,32 +147,31 @@ function isAtHome() {
           document.cookie = 'homeAddress=' + address;
           document.cookie = 'homeLat=' + lat;
           document.cookie = 'homeLon=' + lon;
+
+          // Get current lat and lon
+          currentLat = Math.round(cookieStructure['currentLat'] * 100) / 100;
+          currentLon = Math.round(cookieStructure['currentLon'] * 100) / 100;
+
+          return lat <= currentLat + 0.05 && lat >= currentLat - 0.05 && lon <= currentLon + 0.05 && lon >= currentLon - 0.05;
         } else {
           $('input#home-address').addClass('error');
           $('input#home-address').focus();
           return homeAddressError;
         }
       });
-    }
-  } else {
+}
+} else {
     // Home address exists
     address = cookieStructure['homeAddress'];
     lat = Math.round(cookieStructure['homeLat'] * 100) / 100;
     lon = Math.round(cookieStructure['homeLon'] * 100) / 100;
+
+    // Get current lat and lon
+    currentLat = Math.round(cookieStructure['currentLat'] * 100) / 100;
+    currentLon = Math.round(cookieStructure['currentLon'] * 100) / 100;
+
+    return lat <= currentLat + 0.05 && lat >= currentLat - 0.05 && lon <= currentLon + 0.05 && lon >= currentLon - 0.05;
   }
-
-  // Get current lat and lon
-  currentLat = Math.round(cookieStructure['currentLat'] * 100) / 100;
-  currentLon = Math.round(cookieStructure['currentLon'] * 100) / 100;
-
-  console.log("Home address is " + address);
-  console.log("Home lat is " + lat);
-  console.log("Home lon is " + lon);
-
-  console.log("Current lat is " + currentLat);
-  console.log("Current lon is " + currentLon);
-
-  return lat <= currentLat + 0.05 && lat >= currentLat - 0.05 && lon <= currentLon + 0.05 && lon >= currentLon - 0.05;
 }
 
 // Parses cookies into a hash table of key-value pairs
