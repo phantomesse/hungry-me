@@ -269,3 +269,59 @@ div#category-choices div.choice h2 {
   display: table-cell;
   vertical-align: middle;
 }
+div#venue-choices {
+  position: relative;
+  margin: 0px auto;
+  text-align: center;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  width: 80%;
+  max-width: 960px;
+}
+div#venue-choices div.venue {
+  background: rgba(255, 255, 255, 0.5);
+  color: #ffffff;
+  border-radius: 3px;
+  border: 1px #ffffff solid;
+  -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  display: inline-block;
+  margin: 10px;
+  padding: 20px;
+  position: relative;
+  text-align: center;
+  min-width: 200px;
+  height: 200px;
+  cursor: pointer;
+}
+div#venue-choices div.venue:hover {
+  -webkit-box-shadow: 0px 0px 10px black;
+  box-shadow: 0px 0px 10px black;
+}
+div#venue-choices div.venue:hover h2 {
+  text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+}
+div#venue-choices div.venue div.inner {
+  display: table;
+  width: 100%;
+  height: -webkit-calc(80%);
+  height: calc(80%);
+}
+div#venue-choices div.venue h2 {
+  font: bold 36px 'Oswald', sans-serif;
+  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+  display: table-cell;
+  vertical-align: middle;
+}
+div#venue-choices div.venue span {
+  display: block;
+  padding: 8px 0px;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  background: #32486F;
+  border-radius: 0px 0px 3px 3px;
+  border-top: 1px #ffffff solid;
+  width: 100%;
+}

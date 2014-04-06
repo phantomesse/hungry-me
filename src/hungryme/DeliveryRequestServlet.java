@@ -28,16 +28,38 @@ public class DeliveryRequestServlet extends HttpServlet {
 			// if category is null, request determines available categories
 			String[] listOfCategories = DeliveryDotComApi
 					.queryNearbyCategories(request.getFeeling(),
-							request.getLatitude(),
-							request.getLongitude());
+							request.getLatitude(), request.getLongitude());
 
 			for (String category : listOfCategories) {
+				category = category.substring(1, category.length() - 1).trim();
 				returnStr += category + "\n";
 			}
+			returnStr = returnStr.trim();
 
 		} else {
 			// there is a category, so get venues in category
-			String category = request.getCategory();
+			Venue[] venues = DeliveryDotComApi.getVenues(request.getFeeling(),
+					request.getCategory(), request.getLatitude(),
+					request.getLongitude());
+			if (venues == null) {
+				resp.setContentType("application/json");
+				resp.getWriter().write("{}");
+				return;
+			}
+			
+			JsonArray venueArray = new JsonArray();
+			for (Venue venue : venues) {
+				JsonObject venueObject = new JsonObject();
+				venueObject.addProperty("name", venue.getName());
+				venueObject.addProperty("address", venue.getAddress());
+				venueObject.addProperty("latitude", venue.getLatitude());
+				venueObject.addProperty("longitude", venue.getLongitude());
+				venueArray.add(venueObject);
+			}
+			
+			resp.setContentType("application/json");
+			resp.getWriter().write(venueArray.toString());
+			return;
 		}
 
 		resp.setContentType("text/plain");
@@ -56,18 +78,18 @@ public class DeliveryRequestServlet extends HttpServlet {
 		private static final String PARAM_MODE_FOOD = "&merchant_type=R";
 		private static final String PARAM_MODE_DRINK = "&merchant_type=W";
 
-		public static String[] queryNearbyCategories(Common.Feeling feeling, 
+		public static String[] queryNearbyCategories(Common.Feeling feeling,
 				double latitude, double longitude) {
 			ArrayList<String> nearbyCategories = new ArrayList<String>();
 
 			try {
 				// there are no categories for drinks
-				if (feeling.equals(Common.Feeling.THIRSTY)) return new String[0];
+				if (feeling.equals(Common.Feeling.THIRSTY))
+					return new String[0];
 
-				URL queryURL = new URL(API_BASE_URL 
-						+ PARAM_LATITUDE_PREFIX	+ Double.toString(latitude) 
-						+ PARAM_LONGITUDE_PREFIX + Double.toString(longitude)
-						+ PARAM_MODE_FOOD);
+				URL queryURL = new URL(API_BASE_URL + PARAM_LATITUDE_PREFIX
+						+ Double.toString(latitude) + PARAM_LONGITUDE_PREFIX
+						+ Double.toString(longitude) + PARAM_MODE_FOOD);
 				String ApiReplyJson = Common.requestHttp(queryURL);
 
 				/*
@@ -111,36 +133,70 @@ public class DeliveryRequestServlet extends HttpServlet {
 			}
 		}
 
-
-		public static Venue[] getVenues(Common.Feeling feeling, String category, 
-				double latitude, double longitude) {
+		public static Venue[] getVenues(Common.Feeling feeling,
+				String findCategory, double latitude, double longitude) {
 			ArrayList<Venue> venues = new ArrayList<Venue>();
 
 			try {
 				URL queryURL;
-				if (feeling.equals(Common.Feeling.THIRSTY)) {
-					
-					queryURL = new URL(API_BASE_URL 
-							+ PARAM_LATITUDE_PREFIX + Double.toString(latitude) 
-							+ PARAM_LONGITUDE_PREFIX + Double.toString(longitude)
-							+ PARAM_MODE_DRINK);
+				switch (feeling) {
+				case HUNGRY:
+					queryURL = new URL(API_BASE_URL + PARAM_LATITUDE_PREFIX
+							+ Double.toString(latitude) + PARAM_LONGITUDE_PREFIX
+							+ Double.toString(longitude) + PARAM_MODE_FOOD);
 					String ApiReplyJson = Common.requestHttp(queryURL);
-					
+
 					JsonObject jobject = new JsonParser().parse(ApiReplyJson)
 							.getAsJsonObject();
 					JsonArray jarray = jobject
 							.getAsJsonArray(JSON_MERCHANT_ARRAY_NAME);
 					Iterator<JsonElement> iter = jarray.iterator();
+
 					while (iter.hasNext()) {
 						jobject = iter.next().getAsJsonObject();
-						JsonArray cuisines = jobject.getAsJsonObject(JSON_MERCHANT_SUMMARY_NAME)
-							.getAsJsonArray(JSON_MERCHANT_SUMMARY_CUISINES_ARRAY_NAME);
-						//if cuisines contains "category" fill out and add the venue to return
+						String name = jobject
+								.getAsJsonObject(JSON_MERCHANT_SUMMARY_NAME)
+								.getAsJsonPrimitive("name").getAsString();
+						JsonObject location = jobject
+								.getAsJsonObject("location");
+						String address = location.getAsJsonPrimitive("street")
+								.getAsString();
+						double lon = Double.parseDouble(location
+								.getAsJsonPrimitive("longitude").getAsString());
+						double lat = Double.parseDouble(location
+								.getAsJsonPrimitive("latitude").getAsString());
+
+						// Check if categorymatches
+						try {
+							JsonArray cuisines = jobject.getAsJsonObject(
+									JSON_MERCHANT_SUMMARY_NAME).getAsJsonArray(
+									JSON_MERCHANT_SUMMARY_CUISINES_ARRAY_NAME);
+
+							Iterator<JsonElement> cuisinesIter = cuisines
+									.iterator();
+
+							while (cuisinesIter.hasNext()) {
+								String category = cuisinesIter.next()
+										.toString();
+								category = category.substring(1,
+										category.length() - 1).trim();
+								
+								System.out.println("findcategory = " + findCategory);
+								System.out.println("category = " + category);
+								
+								if (category.equals(findCategory)) {
+									Venue venue = new Venue(name, lat, lon,
+											address);
+									venues.add(venue);
+									System.out.println(name);
+									break;
+								}
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
 					}
-						
-					
-				} else {
-					
 				}
 
 			} catch (Exception e) {

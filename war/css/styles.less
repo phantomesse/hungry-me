@@ -285,3 +285,59 @@ div#category-choices {
     }
   }
 }
+
+div#venue-choices {
+  position: relative;
+  margin: 0px auto;
+  text-align: center;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  width: 80%;
+  max-width: @max-width;
+
+  div.venue {
+    .box-styling;
+
+    display: inline-block;
+    margin: 10px;
+    padding: 20px;
+    position: relative;
+    text-align: center;
+    min-width: 200px;
+    height: 200px;
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: 0px 0px 10px black;
+
+      h2 {
+        text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+      }
+    }
+
+    div.inner {
+      display: table;
+      width: 100%;
+      height: calc(100% - 20px);
+    }
+
+    h2 {
+      .font-heading;
+
+      display: table-cell;
+      vertical-align: middle;
+    }
+
+    span {
+      display: block;
+      padding: 8px 0px;
+      position: absolute;
+      bottom: 0px; left: 0px;
+      background: #32486F;
+      border-radius: 0px 0px 3px 3px;
+      border-top: 1px @color-base solid;
+      width: 100%;
+    }
+  }
+}
