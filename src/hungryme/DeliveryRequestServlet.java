@@ -149,12 +149,14 @@ public class DeliveryRequestServlet extends HttpServlet {
 							+ Double.toString(latitude)
 							+ PARAM_LONGITUDE_PREFIX
 							+ Double.toString(longitude) + PARAM_MODE_FOOD);
+					break;
 
 				case THIRSTY:
 					queryURL = new URL(API_BASE_URL + PARAM_LATITUDE_PREFIX
 							+ Double.toString(latitude)
 							+ PARAM_LONGITUDE_PREFIX
 							+ Double.toString(longitude) + PARAM_MODE_DRINK);
+					break;
 
 				}
 				String ApiReplyJson = Common.requestHttp(queryURL);

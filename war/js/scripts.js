@@ -88,6 +88,7 @@ function feelingHungry() {
 
           // Set title and subtitle
           $('#venues h1#title').text("Here are some restaurants!");
+          $('#venues h2#subtitle').text("");
 
           // Show some venues
           
@@ -118,6 +119,12 @@ function feelingThirsty() {
 
   atHome.done(function(data) {
     if (data === true) {
+      $('#category-choices').empty();
+      $('#categories h1#title').empty();
+      $('#categories h2#subtitle').empty();
+
+      $('#venue-choices').empty();
+
       showLoadingScreen('section#venues');
 
       // Scroll to venues section
@@ -173,7 +180,6 @@ function isAtHome() {
           var lon = location.A;
 
           if (lat == null || lon == null) {
-            console.log("HI");
             $('input#home-address').addClass('error');
             $('input#home-address').focus();
             return homeAddressError;

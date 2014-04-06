@@ -213,7 +213,9 @@ button[id*='i-am-'] {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
   display: inline-block;
   margin: 50px 20px 0px;
-  padding: 50px 0px;
+  padding: 50px 120px 50px 0px;
+  background-repeat: no-repeat;
+  background-position: bottom right;
   font-size: 50px;
   min-width: 400px;
   width: 40%;
@@ -221,6 +223,12 @@ button[id*='i-am-'] {
   max-width: calc(460px);
   cursor: pointer;
   outline: none;
+}
+button[id*='i-am-']#i-am-hungry {
+  background-image: url('../images/hungry.png');
+}
+button[id*='i-am-']#i-am-thirsty {
+  background-image: url('../images/thirsty.png');
 }
 button[id*='i-am-']:hover {
   text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
