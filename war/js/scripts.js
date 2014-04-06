@@ -97,7 +97,7 @@ function feelingHungry() {
         $.post("delivery", {'feeling' : 'hungry', 'lat' : currentLat, 'lon' : currentLon, 'not' : '', 'category' : choice }).done(function(data) {
 
           if (categories.length <= 2) {
-            $('#category-choices').append('<div class="choice nothing"><div class="inner"><h2>There\'s nothing open!</h2></div></div>');
+            $('#venue-choices').append('<div class="choice nothing"><div class="inner"><h2>There\'s nothing open...</h2></div></div>');
           } else {
             for (var i = 0; i < data.length; i++) {
               $('#venue-choices').append('<a href="' + data[i].url + '" target="_blank"><div class="venue"><div class="inner"><h2>' + data[i].name + '</h2><span>' + data[i].address + '</span></div></div></a>')
@@ -137,16 +137,54 @@ hideLoadingScreen('section#categories');
 
     // Get stuff
     $.post("nearby", {'feeling' : 'hungry', 'lat' : currentLat, 'lon' : currentLon, 'not' : '' }).done(function(data) {
+      console.log(data);
+
       var categories = data.split('\n');
 
       // Show some categories
       if (categories.length <= 2) {
-        $('#category-choices').append('<div class="choice nothing"><div class="inner"><h2>There\'s nothing open!</h2></div></div>');
+        $('#category-choices').append('<div class="choice nothing"><div class="inner"><h2>There\'s nothing open...</h2></div></div>');
       } else {
         for (var i = 0; i < categories.length - 1; i++) {
           $('#category-choices').append('<div class="choice"><div class="inner"><h2>' + categories[i] + '</h2></div></div>');
         }
       }
+
+      $('.choice').click(function() {
+        var choice = $($(this).children('.inner')[0]).children('h2').text();
+
+        $('#venue-choices').empty();
+
+        // Show loading screen
+        showLoadingScreen('section#venues');
+
+        // Scroll to categories section
+        $('html, body').animate({
+          scrollTop: $("#venues").offset().top
+        }, 500);
+
+        // Load venues based on choice
+        $.post("nearby", {'feeling' : 'hungry', 'lat' : currentLat, 'lon' : currentLon, 'not' : '', 'category' : choice }).done(function(data) {
+
+          if (categories.length <= 2) {
+            $('#venue-choices').append('<div class="choice nothing"><div class="inner"><h2>There\'s nothing open...</h2></div></div>');
+          } else {
+            for (var i = 0; i < data.length; i++) {
+              var googleMapsUrl = 'https://www.google.com/maps?saddr=My+Location&daddr=' + data[i].address.replace(/ /g, '+');;
+              $('#venue-choices').append('<a href="' + googleMapsUrl + '" target="_blank"><div class="venue"><div class="inner"><h2>' + data[i].name + '</h2><span>' + data[i].address + '</span></div></div></a>')
+            }
+          }
+
+
+          // Set title and subtitle
+          $('#venues h1#title').text("Here are some restaurants!");
+          $('#venues h2#subtitle').text("");
+          
+
+          hideLoadingScreen('section#venues');
+        });
+
+      });
 
       hideLoadingScreen('section#categories');
     });
@@ -175,7 +213,7 @@ function feelingThirsty() {
       // Load venues based on choice
       $.post("delivery", {'feeling' : 'thirsty', 'lat' : currentLat, 'lon' : currentLon, 'not' : '' }).done(function(data) {
         if (categories.length <= 2) {
-          $('#category-choices').append('<div class="choice nothing"><div class="inner"><h2>There\'s nothing open!</h2></div></div>');
+          $('#venue-choices').append('<div class="choice nothing"><div class="inner"><h2>There\'s nothing open...</h2></div></div>');
         } else {
           for (var i = 0; i < data.length; i++) {
             $('#venue-choices').append('<a href="' + data[i].url + '" target="_blank"><div class="venue"><div class="inner"><h2>' + data[i].name + '</h2><span>' + data[i].address + '</span></div></div></a>')
@@ -204,7 +242,7 @@ function feelingThirsty() {
         console.log(categories.length);
 
         if (categories.length <= 2) {
-          $('#category-choices').append('<div class="choice nothing"><div class="inner"><h2>There\'s nothing open!</h2></div></div>');
+          $('#category-choices').append('<div class="choice nothing"><div class="inner"><h2>There\'s nothing open...</h2></div></div>');
         } else {
 
           // Show some categories
@@ -216,6 +254,42 @@ function feelingThirsty() {
         // Set title and subtitle
         $('#categories h1#title').text("It looks like you're out and about!");
         $('#categories h2#subtitle').text("Here are some bar types near you...");
+
+        $('.choice').click(function() {
+        var choice = $($(this).children('.inner')[0]).children('h2').text();
+
+        $('#venue-choices').empty();
+
+        // Show loading screen
+        showLoadingScreen('section#venues');
+
+        // Scroll to categories section
+        $('html, body').animate({
+          scrollTop: $("#venues").offset().top
+        }, 500);
+
+        // Load venues based on choice
+        $.post("nearby", {'feeling' : 'thirsty', 'lat' : currentLat, 'lon' : currentLon, 'not' : '', 'category' : choice }).done(function(data) {
+
+          if (categories.length <= 2) {
+            $('#venue-choices').append('<div class="choice nothing"><div class="inner"><h2>There\'s nothing open...</h2></div></div>');
+          } else {
+            for (var i = 0; i < data.length; i++) {
+              var googleMapsUrl = 'https://www.google.com/maps?saddr=My+Location&daddr=' + data[i].address.replace(/ /g, '+');;
+              $('#venue-choices').append('<a href="' + googleMapsUrl + '" target="_blank"><div class="venue"><div class="inner"><h2>' + data[i].name + '</h2><span>' + data[i].address + '</span></div></div></a>')
+            }
+          }
+
+
+          // Set title and subtitle
+          $('#venues h1#title').text("Here are some bars!");
+          $('#venues h2#subtitle').text("");
+          
+
+          hideLoadingScreen('section#venues');
+        });
+
+      });
 
         hideLoadingScreen('section#categories');
       });
