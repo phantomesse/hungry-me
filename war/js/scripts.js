@@ -95,8 +95,13 @@ function feelingHungry() {
 
         // Load venues based on choice
         $.post("delivery", {'feeling' : 'hungry', 'lat' : currentLat, 'lon' : currentLon, 'not' : '', 'category' : choice }).done(function(data) {
-          for (var i = 0; i < data.length; i++) {
-            $('#venue-choices').append('<a href="' + data[i].url + '" target="_blank"><div class="venue"><div class="inner"><h2>' + data[i].name + '</h2><span>' + data[i].address + '</span></div></div></a>')
+
+          if (categories.length <= 2) {
+            $('#category-choices').append('<div class="choice nothing"><div class="inner"><h2>There\'s nothing open!</h2></div></div>');
+          } else {
+            for (var i = 0; i < data.length; i++) {
+              $('#venue-choices').append('<a href="' + data[i].url + '" target="_blank"><div class="venue"><div class="inner"><h2>' + data[i].name + '</h2><span>' + data[i].address + '</span></div></div></a>')
+            }
           }
 
 
@@ -122,8 +127,8 @@ hideLoadingScreen('section#categories');
     $('#category-choices').empty();
 
     // Set title and subtitle
-    $('#categories h1#title').text("It looks like you're outside!");
-    $('#categories h2#subtitle').text("Here are some cuisine types near you...");
+    $('#categories h1#title').text("It looks like you're out and about!");
+    $('#categories h2#subtitle').text("Here are some food choices near you...");
 
     // Scroll to categories section
     $('html, body').animate({
@@ -135,8 +140,12 @@ hideLoadingScreen('section#categories');
       var categories = data.split('\n');
 
       // Show some categories
-      for (var i = 0; i < categories.length - 1; i++) {
-        $('#category-choices').append('<div class="choice"><div class="inner"><h2>' + categories[i] + '</h2></div></div>');
+      if (categories.length <= 2) {
+        $('#category-choices').append('<div class="choice nothing"><div class="inner"><h2>There\'s nothing open!</h2></div></div>');
+      } else {
+        for (var i = 0; i < categories.length - 1; i++) {
+          $('#category-choices').append('<div class="choice"><div class="inner"><h2>' + categories[i] + '</h2></div></div>');
+        }
       }
 
       hideLoadingScreen('section#categories');
@@ -165,8 +174,12 @@ function feelingThirsty() {
 
       // Load venues based on choice
       $.post("delivery", {'feeling' : 'thirsty', 'lat' : currentLat, 'lon' : currentLon, 'not' : '' }).done(function(data) {
-        for (var i = 0; i < data.length; i++) {
-          $('#venue-choices').append('<a href="' + data[i].url + '" target="_blank"><div class="venue"><div class="inner"><h2>' + data[i].name + '</h2><span>' + data[i].address + '</span></div></div></a>')
+        if (categories.length <= 2) {
+          $('#category-choices').append('<div class="choice nothing"><div class="inner"><h2>There\'s nothing open!</h2></div></div>');
+        } else {
+          for (var i = 0; i < data.length; i++) {
+            $('#venue-choices').append('<a href="' + data[i].url + '" target="_blank"><div class="venue"><div class="inner"><h2>' + data[i].name + '</h2><span>' + data[i].address + '</span></div></div></a>')
+          }
         }
 
         // Set title and subtitle
@@ -177,14 +190,35 @@ function feelingThirsty() {
       });
 
     } else if (data === false) {
-      // Set title and subtitle
-      $('#categories h1#title').text("It looks like you're outside!");
-      $('#categories h2#subtitle').text("Here are some drink types near you...");
+      $('#category-choices').empty();
+
+      showLoadingScreen('section#categories');
 
       // Scroll to categories section
       $('html, body').animate({
         scrollTop: $("#categories").offset().top
       }, 500);
+
+      $.post("nearby", {'feeling' : 'thirsty', 'lat' : currentLat, 'lon' : currentLon, 'not' : '' }).done(function(data) {
+        var categories = data.split('\n');
+        console.log(categories.length);
+
+        if (categories.length <= 2) {
+          $('#category-choices').append('<div class="choice nothing"><div class="inner"><h2>There\'s nothing open!</h2></div></div>');
+        } else {
+
+          // Show some categories
+          for (var i = 0; i < categories.length - 1; i++) {
+            $('#category-choices').append('<div class="choice"><div class="inner"><h2>' + categories[i] + '</h2></div></div>');
+          }
+        }
+
+        // Set title and subtitle
+        $('#categories h1#title').text("It looks like you're out and about!");
+        $('#categories h2#subtitle').text("Here are some bar types near you...");
+
+        hideLoadingScreen('section#categories');
+      });
     }
   });
 }
