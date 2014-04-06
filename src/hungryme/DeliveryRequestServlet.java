@@ -27,18 +27,14 @@ public class DeliveryRequestServlet extends HttpServlet {
 		if (request.getCategory() == null) {
 			// if category is null, request determines available categories
 			String[] listOfCategories = DeliveryDotComApi
-					.queryNearbyCategories(request.getLatitude(),
+					.queryNearbyCategories(request.getFeeling(),
+							request.getLatitude(),
 							request.getLongitude());
 
 			for (String category : listOfCategories) {
-				category = category.substring(1, category.length() - 1).trim();
-				if (category.isEmpty()) {
-					continue;
-				}
 				returnStr += category + "\n";
 			}
-			
-			returnStr = returnStr.trim();
+
 		} else {
 			// there is a category, so get venues in category
 			String category = request.getCategory();
@@ -55,33 +51,23 @@ public class DeliveryRequestServlet extends HttpServlet {
 		private static final String JSON_MERCHANT_ARRAY_NAME = "merchants";
 		private static final String JSON_MERCHANT_SUMMARY_NAME = "summary";
 		private static final String JSON_MERCHANT_SUMMARY_CUISINES_ARRAY_NAME = "cuisines";
-		
-		public static Venue[] getVenues(double latitude, double longitude, String category) {
-			ArrayList<Venue> venues = new ArrayList<Venue>();
-			
-			try {
-				URL queryURL = new URL(API_BASE_URL + "&latitude="
-						+ Double.toString(latitude) + "&longitude="
-						+ Double.toString(longitude));
-				String ApiReplyJson = Common.requestHttp(queryURL);
-				
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
-			}
-			
-			return venues.toArray(new Venue[0]);
-		}
+		private static final String PARAM_LATITUDE_PREFIX = "&latitude=";
+		private static final String PARAM_LONGITUDE_PREFIX = "&longitude=";
+		private static final String PARAM_MODE_FOOD = "&merchant_type=R";
+		private static final String PARAM_MODE_DRINK = "&merchant_type=W";
 
-		public static String[] queryNearbyCategories(double latitude,
-				double longitude) {
+		public static String[] queryNearbyCategories(Common.Feeling feeling, 
+				double latitude, double longitude) {
 			ArrayList<String> nearbyCategories = new ArrayList<String>();
 
 			try {
-				URL queryURL = new URL(API_BASE_URL + "&latitude="
-						+ Double.toString(latitude) + "&longitude="
-						+ Double.toString(longitude));
+				// there are no categories for drinks
+				if (feeling.equals(Common.Feeling.THIRSTY)) return new String[0];
+
+				URL queryURL = new URL(API_BASE_URL 
+						+ PARAM_LATITUDE_PREFIX	+ Double.toString(latitude) 
+						+ PARAM_LONGITUDE_PREFIX + Double.toString(longitude)
+						+ PARAM_MODE_FOOD);
 				String ApiReplyJson = Common.requestHttp(queryURL);
 
 				/*
@@ -123,6 +109,46 @@ public class DeliveryRequestServlet extends HttpServlet {
 				e.printStackTrace();
 				return null;
 			}
+		}
+
+
+		public static Venue[] getVenues(Common.Feeling feeling, String category, 
+				double latitude, double longitude) {
+			ArrayList<Venue> venues = new ArrayList<Venue>();
+
+			try {
+				URL queryURL;
+				if (feeling.equals(Common.Feeling.THIRSTY)) {
+					
+					queryURL = new URL(API_BASE_URL 
+							+ PARAM_LATITUDE_PREFIX + Double.toString(latitude) 
+							+ PARAM_LONGITUDE_PREFIX + Double.toString(longitude)
+							+ PARAM_MODE_DRINK);
+					String ApiReplyJson = Common.requestHttp(queryURL);
+					
+					JsonObject jobject = new JsonParser().parse(ApiReplyJson)
+							.getAsJsonObject();
+					JsonArray jarray = jobject
+							.getAsJsonArray(JSON_MERCHANT_ARRAY_NAME);
+					Iterator<JsonElement> iter = jarray.iterator();
+					while (iter.hasNext()) {
+						jobject = iter.next().getAsJsonObject();
+						JsonArray cuisines = jobject.getAsJsonObject(JSON_MERCHANT_SUMMARY_NAME)
+							.getAsJsonArray(JSON_MERCHANT_SUMMARY_CUISINES_ARRAY_NAME);
+						//if cuisines contains "category" fill out and add the venue to return
+					}
+						
+					
+				} else {
+					
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+
+			return venues.toArray(new Venue[0]);
 		}
 
 	}
