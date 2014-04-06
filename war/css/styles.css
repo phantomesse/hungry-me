@@ -316,7 +316,10 @@ div#venue-choices div.venue h2 {
 }
 div#venue-choices div.venue span {
   display: block;
-  padding: 8px 0px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 8px 10px;
   position: absolute;
   bottom: 0px;
   left: 0px;
