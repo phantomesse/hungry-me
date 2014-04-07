@@ -1,6 +1,6 @@
-package hungryme;
+package hungryme.old;
 
-import hungryme.Common.Feeling;
+import hungryme.old.Common.Feeling;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

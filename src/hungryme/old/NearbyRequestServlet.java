@@ -1,4 +1,4 @@
-package hungryme;
+package hungryme.old;
 
 import java.io.IOException;
 import java.net.URL;
