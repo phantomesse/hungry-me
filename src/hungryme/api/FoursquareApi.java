@@ -33,14 +33,12 @@ public class FoursquareApi extends ApiWrapper {
 	private static final String PARAM_VALUE_FOOD = "food";
 	private static final String PARAM_VALUE_DRINK = "drinks";
 
-	@Override
-	public Category[] queryCategories(Feeling feeling, Location location) {
-		// Convert latitude/longitude into parameters
-		Parameter paramLocation = new Parameter(PARAM_KEY_LAT_LON,
-				location.getLatitude() + "," + location.getLongitude());
+	private Parameter paramFeeling;
+	private Parameter paramLocation;
 
+	public FoursquareApi(Feeling feeling, Location location) {
 		// Convert feeling to parameters
-		Parameter paramFeeling = null;
+		paramFeeling = null;
 		switch (feeling) {
 		case HUNGRY:
 			paramFeeling = new Parameter(PARAM_KEY_SECTION, PARAM_VALUE_FOOD);
@@ -50,6 +48,13 @@ public class FoursquareApi extends ApiWrapper {
 			break;
 		}
 
+		// Convert latitude/longitude into parameters
+		paramLocation = new Parameter(PARAM_KEY_LAT_LON, location.getLatitude()
+				+ "," + location.getLongitude());
+	}
+
+	@Override
+	public Category[] queryCategories() {
 		// Make query and get JSON
 		JsonObject json = query(BASE_URL, paramLocation, paramFeeling);
 
@@ -70,27 +75,56 @@ public class FoursquareApi extends ApiWrapper {
 				}
 			}
 		}
-		
+
 		// Convert hash map to array of categories
 		Iterator<Category> iter = categoryHashMap.values().iterator();
 		ArrayList<Category> categories = new ArrayList<Category>();
 		while (iter.hasNext()) {
 			categories.add(iter.next());
 		}
-		
+
 		return categories.toArray(new Category[0]);
 	}
 
 	@Override
-	public Venue[] queryVenues(Feeling feeling, Location location,
-			String... categories) {
-		// TODO Auto-generated method stub
-		return null;
+	public Venue[] queryVenues(String... categories) {
+		// Make query and get JSON
+		JsonObject json = query(BASE_URL, paramLocation, paramFeeling);
+
+		// Parse JSON to get list of categories
+		Venue[] venues = parseVenuesFromJson(json);
+		
+		if (categories.length == 0) {
+			// No categories specified, so return all venues
+			return venues;
+		}
+		
+		// Only return venues with the specified categories
+		ArrayList<Venue> wantVenues = new ArrayList<Venue>();
+		for (Venue venue : venues) {
+			String[] venueCategories = venue.getCategories();
+			
+			for (String venueCategory : venueCategories) {
+				boolean match = false;
+				for (String category : categories) {
+					if (category.equals(venueCategory)) {
+						match = true;
+						break;
+					}
+				}
+				
+				if (match) {
+					wantVenues.add(venue);
+					break;
+				}
+			}
+		}
+		return wantVenues.toArray(new Venue[0]);
 	}
 
 	private Venue[] parseVenuesFromJson(JsonObject json) {
 		ArrayList<Venue> venues = new ArrayList<Venue>();
-		
+
 		JsonArray items = json.getAsJsonObject("response")
 				.getAsJsonArray("groups").get(0).getAsJsonObject()
 				.getAsJsonArray("items");
@@ -150,18 +184,10 @@ public class FoursquareApi extends ApiWrapper {
 						.getAsJsonPrimitive("name").getAsString();
 				venue.addCategories(category);
 			}
-			
+
 			venues.add(venue);
 		}
 
 		return venues.toArray(new Venue[0]);
-	}
-	
-	public static void main(String[] args) {
-		FoursquareApi api = new FoursquareApi();
-		Category[] categories = api.queryCategories(Feeling.THIRSTY, new Location(40.8006, -73.9653));
-		for (Category category : categories) {
-			System.out.println(category + "\n");
-		}
 	}
 }

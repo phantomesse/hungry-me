@@ -2,8 +2,12 @@ package hungryme.data;
 
 import java.util.ArrayList;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
-public class Venue {
+
+public class Venue extends Data {
 	private String name;
 	private Location location;
 	private String url;
@@ -56,6 +60,22 @@ public class Venue {
 
 	public String getName() {
 		return name;
+	}
+	
+	public JsonObject toJson() {
+		JsonObject json = new JsonObject();
+		json = addJsonProperty(json, "name", name);
+		json = addJsonProperty(json, "url", url);
+		json = addJsonProperty(json, "rating", rating);
+		json.add("location", location.toJson());
+		
+		JsonArray categoriesJson = new JsonArray();
+		for (String category : categories) {
+			categoriesJson.add(new JsonPrimitive(category));
+		}
+		json.add("categories", categoriesJson);
+		
+		return json;
 	}
 	
 	public String toString() {

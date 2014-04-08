@@ -1,8 +1,6 @@
 package hungryme.api;
 
 import hungryme.data.Category;
-import hungryme.data.Feeling;
-import hungryme.data.Location;
 import hungryme.data.Venue;
 
 import java.io.BufferedReader;
@@ -17,8 +15,8 @@ import com.google.gson.JsonParser;
 
 public abstract class ApiWrapper {
 	
-	public abstract Category[] queryCategories(Feeling feeling, Location location);
-	public abstract Venue[] queryVenues(Feeling feeling, Location location, String... categories);
+	public abstract Category[] queryCategories();
+	public abstract Venue[] queryVenues(String... categories);
 	
 	protected JsonObject query(String baseUrl, Parameter... parameters) {
 		for (Parameter parameter : parameters) {
@@ -28,7 +26,6 @@ public abstract class ApiWrapper {
 		try {
 			// Create URL connection
 			URL queryUrl = new URL(baseUrl);
-			System.out.println(baseUrl);
 			URLConnection connection = queryUrl.openConnection();
 			
 			// Read in response JSON

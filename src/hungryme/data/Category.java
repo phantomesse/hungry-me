@@ -2,7 +2,10 @@ package hungryme.data;
 
 import java.util.ArrayList;
 
-public class Category {
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+public class Category extends Data {
 	private String name;
 	private ArrayList<Venue> venues;
 	
@@ -21,6 +24,19 @@ public class Category {
 	
 	public Venue[] getVenues() {
 		return venues.toArray(new Venue[0]);
+	}
+	
+	public JsonObject toJson() {
+		JsonObject json = new JsonObject();
+		json = addJsonProperty(json, "name", name);
+		
+		JsonArray venuesJson = new JsonArray();
+		for (Venue venue : venues) {
+			venuesJson.add(venue.toJson());
+		}
+		json.add("venues", venuesJson);
+		
+		return json;
 	}
 	
 	public String toString() {
